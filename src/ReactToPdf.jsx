@@ -11,7 +11,7 @@ class ReactToPdf extends PureComponent {
   }
 
   toPdf() {
-    const { targetRef, filename, x, y, options, onComplete, customSave } = this.props;
+    const { targetRef, filename, x, y, options, optionsCanvas, onComplete, customSave } = this.props;
     const source = targetRef || this.targetRef;
     const targetComponent = source.current || source;
     if (!targetComponent) {
@@ -19,7 +19,7 @@ class ReactToPdf extends PureComponent {
         'Target ref must be used or informed. See https://github.com/ivmarcos/react-to-pdf#usage.'
       );
     }
-    html2canvas(targetComponent, { logging: false, useCORS: true }).then(canvas => {
+    html2canvas(targetComponent, { logging: false, useCORS: true, ...optionsCanvas }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new JsPdf(options);
       pdf.addImage(imgData, 'JPEG', x, y);
@@ -44,6 +44,7 @@ ReactToPdf.propTypes = {
   x: PropTypes.number,
   y: PropTypes.number,
   options: PropTypes.object,
+  optionsCanvas: PropTypes.object,
   children: PropTypes.func.isRequired,
   customSave: PropTypes.func,
   onComplete: PropTypes.func,
